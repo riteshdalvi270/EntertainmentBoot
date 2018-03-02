@@ -6,18 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonSerialize
-@JsonDeserialize
 public class MovieVo {
 
 	@JsonProperty("movies")
-	private List<Movie> movies;
+	private List<Movies> movies;
 
-	public List<Movie> getMovies() {
+	public List<Movies> getMovies() {
 		return movies;
 	}
 
-	public void setMovies(List<Movie> movies) {
+	public void setMovies(List<Movies> movies) {
 		this.movies = movies;
 	}
 }
