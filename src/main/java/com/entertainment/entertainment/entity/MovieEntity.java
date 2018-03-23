@@ -1,4 +1,6 @@
-package com.entertainment.entertainment.model;
+package com.entertainment.entertainment.entity;
+
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,27 +13,30 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="Movie")
-public class Movie {
+public class MovieEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
-	private int id;
+	private long id;
 	
 	@Column(name="isDeleted")
 	private boolean isDeleted;
 	
-	@JoinColumn(name="id")
-	private MovieType movieType;
+	@Column(name="modifiedDate")
+	private Date modifiedDate;
 	
-	@OneToOne(mappedBy="movie")
-	Movies movies;
+	@JoinColumn(name="id")
+	private MovieTypeEntity movieType;
+	
+	@OneToOne(mappedBy="movieVersion")
+	private MovieVersionEntity movieVersion;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -43,21 +48,19 @@ public class Movie {
 		this.isDeleted = isDeleted;
 	}
 
-	public MovieType getMovieType() {
+	public MovieTypeEntity getMovieType() {
 		return movieType;
 	}
 
-	public void setMovieType(MovieType movieType) {
+	public void setMovieType(MovieTypeEntity movieType) {
 		this.movieType = movieType;
 	}
 
-	public Movies getMovies() {
-		return movies;
+	public MovieVersionEntity getMovie() {
+		return movieVersion;
 	}
 
-	public void setMovies(Movies movies) {
-		this.movies = movies;
+	public void setMovie(MovieVersionEntity movie) {
+		this.movieVersion = movie;
 	}
-	
-	
 }

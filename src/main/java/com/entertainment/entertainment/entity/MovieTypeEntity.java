@@ -1,4 +1,4 @@
-package com.entertainment.entertainment.model;
+package com.entertainment.entertainment.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,25 +10,28 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "MovieType")
-public class MovieType {
+public class MovieTypeEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
-	private int id;
+	private int movieTypeId;
 	
 	@Column(name="type")
 	private String type;
 	
+	@Column(name="isDeleted")
+	private boolean isDeleted;
+	
 	@OneToOne(mappedBy="movieType")
-	private Movie movie;
+	private MovieEntity movie;
 
 	public int getId() {
-		return id;
+		return movieTypeId;
 	}
 
 	public void setId(int id) {
-		this.id = id;
+		this.movieTypeId = id;
 	}
 
 	public String getType() {
@@ -39,13 +42,19 @@ public class MovieType {
 		this.type = type;
 	}
 
-	public Movie getMovie() {
+	public MovieEntity getMovie() {
 		return movie;
 	}
 
-	public void setMovie(Movie movie) {
+	public void setMovie(MovieEntity movie) {
 		this.movie = movie;
 	}
-	
-	
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
 }

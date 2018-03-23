@@ -1,10 +1,9 @@
-package com.entertainment.entertainment.model;
+package com.entertainment.entertainment.entity;
 
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,30 +13,23 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name="Movie")
+@Table(name="MovieVersion")
 //@EntityListeners(AuditingEntityListener.class)
-//@JsonIgnoreProperties(value={"id","watch_date","modified_date"},allowGetters = true)
-public class Movies {
+public class MovieVersionEntity {
 
 	@Id()
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="id")
-	private long id;
+	private long movieId;
 	
 	@NotBlank
-	@Column(name="movie_name")
+	@Column(name="movieName")
 	private String movieName;
 	
 	@NotBlank
-	@Column(name="director_name")
+	@Column(name="directorName")
 	private String directorName;
 	
 	@NotBlank
@@ -46,30 +38,30 @@ public class Movies {
 	
 	@Column(name="stop_date")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date stopDate;
+	private Date endDate;
 	
-	@Column(name="done_watching")
+	@Column(name="doneWatching")
 	private boolean doneWatching;
 	
-	@Column(name="watch_date")
+	@Column(name="watchDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	//@CreatedDate
 	private Date watchDate;
 	
-	@Column(name="modified_date")
+	@Column(name="modifiedDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	//@LastModifiedDate
 	private Date modifiedDate;
 	
 	@JoinColumn(name="id")
-	private Movie movie;
+	private MovieEntity movie;
 
 	public long getId() {
-		return id;
+		return movieId;
 	}
 
 	public void setId(long id) {
-		this.id = id;
+		this.movieId = id;
 	}
 
 	public String getMovieName() {
@@ -96,12 +88,12 @@ public class Movies {
 		this.description = description;
 	}
 
-	public Date getStopDate() {
-		return stopDate;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setStopDate(Date stopDate) {
-		this.stopDate = stopDate;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	public boolean isDoneWatching() {
