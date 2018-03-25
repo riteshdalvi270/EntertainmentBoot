@@ -6,6 +6,7 @@ import com.entertainment.entertainment.repository.MovieTypeRepository;
 import com.entertainment.entertainment.service.MovieTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Ritesh Dalvi
@@ -17,6 +18,7 @@ public class MovieTypeServiceImpl implements MovieTypeService {
     MovieTypeRepository movieTypeRepository;
 
     @Override
+    @Transactional
     public MovieTypeVo createMovieType(MovieTypeVo movieTypeRequest) {
 
         MovieTypeEntity movieType = new MovieTypeEntity();

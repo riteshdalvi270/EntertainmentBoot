@@ -11,7 +11,7 @@ public interface MovieService {
 	
 	List<MovieVo> getMovies();
 	
-	MovieVo getMovie(long id);
+	MovieVo getMovie(long id) throws Exception;
 	
 /*
 	MovieVo update(long id, MovieVo movie);

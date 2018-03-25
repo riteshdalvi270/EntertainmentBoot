@@ -31,7 +31,7 @@ public class MoviesEndpoint {
 	@Autowired
 	private MovieTypeService movieTypeService;
 	
-	@PostMapping
+	@PostMapping(value = "movie_type")
 	public ResponseEntity<?> addMovieType(@Valid @RequestBody MovieTypeVo movieTypeRequest) {
 		
 		MovieTypeVo movieType = movieTypeService.createMovieType(movieTypeRequest);
@@ -39,7 +39,7 @@ public class MoviesEndpoint {
 		return ResponseEntity.ok(movieType);
 	}
 
-	@PostMapping
+	@PostMapping(value = "movie")
 	public ResponseEntity<?> addMovies(@Valid @RequestBody MovieVo movie) {
 
 		try {
@@ -47,6 +47,7 @@ public class MoviesEndpoint {
 
 			return ResponseEntity.status(HttpStatus.CREATED).body(newMovie);
 		}catch(Exception e) {
+			e.getStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -65,9 +66,15 @@ public class MoviesEndpoint {
 	
 	@GetMapping(value="{id}")
 	public ResponseEntity<?> getMovie(@PathVariable long id) {
-		
-		MovieVo movie = movieService.getMovie(id);
-		
+
+		MovieVo movie = null;
+		try {
+			movie = movieService.getMovie(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
 		return ResponseEntity.ok(movie);
 			
 	}

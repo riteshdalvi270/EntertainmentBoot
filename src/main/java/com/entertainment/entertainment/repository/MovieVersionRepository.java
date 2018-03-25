@@ -1,15 +1,25 @@
 package com.entertainment.entertainment.repository;
 
 import com.entertainment.entertainment.entity.MovieVersionEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * @author Ritesh Dalvi
  **/
-public interface MovieVersionRepository extends JpaRepository<MovieVersionEntity,Long> {
+@Repository
+@Transactional(readOnly = true)
+public interface MovieVersionRepository extends org.springframework.data.repository.Repository<MovieVersionEntity,Long> {
 
-  /*  @Modifying
-    @Query("Update MovieVersion mv set mv.endDate = NOW() and " +
-            "mv.modifiedDate = NOW() and where mv.id = :id and ms.endDate is null")
-    int updateMovieEndDate(@Param("id") long id);*/
+    @Modifying
+    MovieVersionEntity save(MovieVersionEntity movieEntity);
+
+    @Query("Select mve from MovieVersionEntity mve where mve.movieName = :name " +
+            "and mve.endDate is null")
+    Optional<MovieVersionEntity> doesMovieExistWithName(@Param("name") String name);
 }

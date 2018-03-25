@@ -17,8 +17,8 @@ public class MovieVo {
     @JsonProperty("is_deleted")
     private boolean isDeleted;
 
-    @JsonProperty("movie_type")
-    private String movieType;
+    @JsonProperty("movie_type_id")
+    private int typeId;
 
     @JsonProperty("director")
     private String directorName;
@@ -27,13 +27,13 @@ public class MovieVo {
     private String description;
 
     @JsonProperty("end_date")
-    private Date endDate;
+    private String endDate;
 
     @JsonProperty("done_watching")
     private boolean doneWatching;
 
     @JsonProperty("watch_date")
-    private Date watchDate;
+    private String watchDate;
 
     public long getId() {
         return id;
@@ -59,14 +59,6 @@ public class MovieVo {
         isDeleted = deleted;
     }
 
-    public String getMovieType() {
-        return movieType;
-    }
-
-    public void setMovieType(String movieType) {
-        this.movieType = movieType;
-    }
-
     public String getDirectorName() {
         return directorName;
     }
@@ -83,11 +75,11 @@ public class MovieVo {
         this.description = description;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
@@ -99,11 +91,19 @@ public class MovieVo {
         this.doneWatching = doneWatching;
     }
 
-    public Date getWatchDate() {
+    public String getWatchDate() {
         return watchDate;
     }
 
-    public void setWatchDate(Date watchDate) {
+    public void setWatchDate(String watchDate) {
         this.watchDate = watchDate;
+    }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 }

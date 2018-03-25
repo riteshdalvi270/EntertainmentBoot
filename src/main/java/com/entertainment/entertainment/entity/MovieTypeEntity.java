@@ -1,30 +1,24 @@
 package com.entertainment.entertainment.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-@Entity
+@Entity(name = "MovieTypeEntity")
 @Table(name = "MovieType")
 public class MovieTypeEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name="MovieTypeId")
 	private int movieTypeId;
 	
-	@Column(name="type")
+	@Column(name="Type")
 	private String type;
 	
-	@Column(name="isDeleted")
+	@Column(name="IsDeleted")
 	private boolean isDeleted;
 	
-	@OneToOne(mappedBy="movieType")
-	private MovieEntity movie;
+	@OneToOne(mappedBy="movieTypeEntity",optional = false)
+	private MovieEntity movieEntity;
 
 	public int getId() {
 		return movieTypeId;
@@ -42,12 +36,12 @@ public class MovieTypeEntity {
 		this.type = type;
 	}
 
-	public MovieEntity getMovie() {
-		return movie;
+	public MovieEntity getMovieEntity() {
+		return movieEntity;
 	}
 
-	public void setMovie(MovieEntity movie) {
-		this.movie = movie;
+	public void setMovieEntity(MovieEntity movieEntity) {
+		this.movieEntity = movieEntity;
 	}
 
 	public boolean isDeleted() {

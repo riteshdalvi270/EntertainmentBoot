@@ -3,7 +3,7 @@ package com.entertainment.entertainment.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(value= {"id"},allowGetters=true)
+@JsonIgnoreProperties(value= {"id","is_deleted"},allowGetters=true)
 public class MovieTypeVo {
 
     @JsonProperty("id")

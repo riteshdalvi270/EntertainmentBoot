@@ -1,36 +1,30 @@
 package com.entertainment.entertainment.entity;
 
-import java.sql.Date;
+import javax.persistence.*;
+import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-@Entity
+@Entity(name="MovieEntity")
 @Table(name="Movie")
 public class MovieEntity {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="id")
+	@Column(name="Id")
 	private long id;
 	
-	@Column(name="isDeleted")
+	@Column(name="IsDeleted")
 	private boolean isDeleted;
 	
-	@Column(name="modifiedDate")
+	@Column(name="ModifiedDate")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedDate;
+
+	@OneToOne(optional = false)
+	@JoinColumn(name="MovieTypeId")
+	private MovieTypeEntity movieTypeEntity;
 	
-	@JoinColumn(name="id")
-	private MovieTypeEntity movieType;
-	
-	@OneToOne(mappedBy="movieVersion")
-	private MovieVersionEntity movieVersion;
+	@OneToOne(mappedBy="movieEntity",optional = false)
+	private MovieVersionEntity movieVersionEntity;
 
 	public long getId() {
 		return id;
@@ -48,19 +42,27 @@ public class MovieEntity {
 		this.isDeleted = isDeleted;
 	}
 
-	public MovieTypeEntity getMovieType() {
-		return movieType;
+	public MovieTypeEntity getMovieTypeEntity() {
+		return movieTypeEntity;
 	}
 
-	public void setMovieType(MovieTypeEntity movieType) {
-		this.movieType = movieType;
+	public void setMovieTypeEntity(MovieTypeEntity movieTypeEntity) {
+		this.movieTypeEntity = movieTypeEntity;
 	}
 
-	public MovieVersionEntity getMovie() {
-		return movieVersion;
-	}
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
 
-	public void setMovie(MovieVersionEntity movie) {
-		this.movieVersion = movie;
-	}
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public MovieVersionEntity getMovieVersionEntity() {
+        return movieVersionEntity;
+    }
+
+    public void setMovieVersionEntity(MovieVersionEntity movieVersionEntity) {
+        this.movieVersionEntity = movieVersionEntity;
+    }
 }

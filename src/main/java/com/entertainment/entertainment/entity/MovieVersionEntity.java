@@ -1,68 +1,54 @@
 package com.entertainment.entertainment.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-@Entity
+@Entity(name = "MovieVersionEntity")
 @Table(name="MovieVersion")
 //@EntityListeners(AuditingEntityListener.class)
-public class MovieVersionEntity {
+public class MovieVersionEntity implements Serializable {
 
 	@Id()
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="MovieId")
 	private long movieId;
 	
 	@NotBlank
-	@Column(name="movieName")
+	@Column(name="MovieName")
 	private String movieName;
 	
 	@NotBlank
-	@Column(name="directorName")
+	@Column(name="DirectorName")
 	private String directorName;
 	
 	@NotBlank
-	@Column(name="description")
+	@Column(name="Description")
 	private String description;
 	
-	@Column(name="stop_date")
+	@Column(name="StopDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 	
-	@Column(name="doneWatching")
+	@Column(name="DoneWatching")
 	private boolean doneWatching;
 	
-	@Column(name="watchDate")
+	@Column(name="WatchDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	//@CreatedDate
 	private Date watchDate;
 	
-	@Column(name="modifiedDate")
+	@Column(name="ModifiedDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	//@LastModifiedDate
 	private Date modifiedDate;
-	
-	@JoinColumn(name="id")
-	private MovieEntity movie;
 
-	public long getId() {
-		return movieId;
-	}
-
-	public void setId(long id) {
-		this.movieId = id;
-	}
+	@OneToOne(optional = false)
+	@JoinColumn(name="Id")
+	private MovieEntity movieEntity;
 
 	public String getMovieName() {
 		return movieName;
@@ -118,5 +104,21 @@ public class MovieVersionEntity {
 
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public long getMovieId() {
+		return movieId;
+	}
+
+	public void setMovieId(long movieId) {
+		this.movieId = movieId;
+	}
+
+	public MovieEntity getMovieEntity() {
+		return movieEntity;
+	}
+
+	public void setMovieEntity(MovieEntity movieEntity) {
+		this.movieEntity = movieEntity;
 	}
 }

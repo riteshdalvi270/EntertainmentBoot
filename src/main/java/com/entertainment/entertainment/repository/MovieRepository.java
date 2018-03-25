@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,19 +14,15 @@ import com.entertainment.entertainment.entity.MovieEntity;
 
 @Repository
 @Transactional(readOnly=true)
-public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
+public interface MovieRepository extends org.springframework.data.repository.Repository<MovieEntity, Long> {
+
+    @Modifying
+    MovieEntity save(MovieEntity movieEntity);
 	
-	@Query("Select m.id from Movie m inner join fetch m.movies ms where ms.name = :name and m.isDeleted = 0 and m.endDate is null")
-	long doesMovieExistWithName(@Param("name") String name);
-	
-	/*@Modifying
-	@Query("Update Movie m inner join m.movies ms set ms.endDate = NOW() and m.modifiedDate = NOW() and " +
-			"ms.modifiedDate = NOW() and where m.id = :id and ms.endDate is null")
-	int updateMovieEndDate(@Param("id") long id);*/
-	
-	@Query("Select m from Movie m inner join fetch m.movies ms where m.id = :id and m.isDeleted=0 and ms.endDate is null")
+	@Query("SELECT me from MovieEntity me inner join fetch me.movieVersionEntity as mve where me.id = :id and " +
+            "me.isDeleted=0 and mve.endDate is null")
 	Optional<MovieEntity> getMovie(@Param("id") long id);
 	
-	@Query("Select m from Movie m inner join fetch m.movies ms where m.isDeleted=0 and ms.endDate is null")
+	@Query("Select me from MovieEntity me inner join fetch me.movieVersionEntity as mve where me.isDeleted=0 and mve.endDate is null")
 	List<MovieEntity> getMovies();
 }
