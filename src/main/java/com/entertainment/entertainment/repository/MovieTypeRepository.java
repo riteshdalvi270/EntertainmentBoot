@@ -19,5 +19,8 @@ public interface MovieTypeRepository extends org.springframework.data.repository
     MovieTypeEntity save(MovieTypeEntity movieTypeEntity);
 
     @Query("Select mt from MovieTypeEntity mt where mt.movieTypeId = :id")
-    Optional<MovieTypeEntity> getMoveType(@Param("id") int id);
+    Optional<MovieTypeEntity> getMoveTypeEntity(@Param("id") int id);
+
+    @Query("Select mt.type from MovieTypeEntity mt where mt.movieTypeId = :id")
+    String getMovieType(@Param("id") int id);
 }

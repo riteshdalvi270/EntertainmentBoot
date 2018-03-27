@@ -20,9 +20,12 @@ public interface MovieRepository extends org.springframework.data.repository.Rep
     MovieEntity save(MovieEntity movieEntity);
 	
 	@Query("SELECT me from MovieEntity me inner join fetch me.movieVersionEntity as mve where me.id = :id and " +
-            "me.isDeleted=0 and mve.endDate is null")
+            "me.isDeleted=0 and mve.stopDate is null")
 	Optional<MovieEntity> getMovie(@Param("id") long id);
 	
-	@Query("Select me from MovieEntity me inner join fetch me.movieVersionEntity as mve where me.isDeleted=0 and mve.endDate is null")
+	@Query("Select me from MovieEntity me inner join fetch me.movieVersionEntity as mve where me.isDeleted=0 and mve.stopDate is null")
 	List<MovieEntity> getMovies();
+
+	@Query("UPDATE MovieEntity me set me.isDeleted=1 where me.id=:id")
+	void versionMovie(@Param("id") long id);
 }

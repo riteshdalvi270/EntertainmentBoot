@@ -1,5 +1,6 @@
 package com.entertainment.entertainment.service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +13,7 @@ public interface MovieService {
 	List<MovieVo> getMovies();
 	
 	MovieVo getMovie(long id) throws Exception;
-	
-/*
-	MovieVo update(long id, MovieVo movie);
-*/
+
+	MovieVo update(long id, MovieVo movie) throws ParseException;
+
 }

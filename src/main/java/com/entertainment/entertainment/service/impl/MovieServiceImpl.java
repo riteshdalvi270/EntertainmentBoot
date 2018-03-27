@@ -44,14 +44,14 @@ public class MovieServiceImpl implements MovieService{
 			throw new Exception("Movie already exist");
 		}
 
-		Optional<MovieTypeEntity> movieTypeEntityOptional = movieTypeRepository.getMoveType(movie.getTypeId());
+		Optional<MovieTypeEntity> movieTypeEntityOptional = movieTypeRepository.getMoveTypeEntity(movie.getTypeId());
 
 		if(!movieTypeEntityOptional.isPresent()) {
 
 			throw new Exception("Movie already exist");
 		}
 
-		final MovieEntity movieEntity = populateMovieEntity(movie,movieTypeEntityOptional.get());
+		final MovieEntity movieEntity = populateMovieEntity(movieTypeEntityOptional.get());
 
 		MovieEntity savedMovieEntity = movieRepository.save(movieEntity);
 
@@ -77,7 +77,7 @@ public class MovieServiceImpl implements MovieService{
 		movieVersionEntity.setModifiedDate(new Date());
 
 		if(movieVo.getEndDate()!=null) {
-			movieVersionEntity.setEndDate(simpleDateFormat.parse(movieVo.getEndDate()));
+			movieVersionEntity.setStopDate(simpleDateFormat.parse(movieVo.getEndDate()));
 		}
 
 		movieVersionEntity.setMovieEntity(movieEntity);
@@ -85,7 +85,7 @@ public class MovieServiceImpl implements MovieService{
 		return movieVersionEntity;
 	}
 
-	private MovieEntity populateMovieEntity(MovieVo movieVo, MovieTypeEntity movieTypeEntity)  {
+	private MovieEntity populateMovieEntity(MovieTypeEntity movieTypeEntity)  {
 
 		final MovieEntity movie = new MovieEntity();
 		movie.setDeleted(false);
@@ -114,32 +114,60 @@ public class MovieServiceImpl implements MovieService{
 
 		movieVo.setWatchDate(simpleDateFormat.format(savedMovieVersionEntity.getWatchDate()));
 
-		if(savedMovieVersionEntity.getEndDate()!=null) {
-			movieVo.setEndDate(simpleDateFormat.format(savedMovieVersionEntity.getEndDate()));
+		if(savedMovieVersionEntity.getStopDate()!=null) {
+			movieVo.setEndDate(simpleDateFormat.format(savedMovieVersionEntity.getStopDate()));
 		}
 
 		return movieVo;
 	}
 
-/*	// need to update.
 	@Override
 	@Transactional
-	public Movie update(long id, MovieVersion updatedMovie) {
+	public MovieVo update(long id, MovieVo updatedMovie) throws ParseException {
 
-		Optional<Movie> optionalMovie = getMovieEntity(id);
+        Optional<MovieTypeEntity> optionalMovieTypeEntity = movieTypeRepository.getMoveTypeEntity(updatedMovie.getTypeId());
 
-		if(!optionalMovie.isPresent()) {
+        if(!optionalMovieTypeEntity.isPresent()) {
 
-			// throw an exception
-		}
+            throw new RuntimeException("Movie type does not exist");
+        }
 
-		Movie existingMovie = optionalMovie.get();
+        Optional<MovieEntity> optionalMovieEntity = movieRepository.getMovie(id);
 
-		movieRepository.updateMovieEndDate(existingMovie.getId());
+        if(!optionalMovieEntity.isPresent()) {
+            throw new RuntimeException("Movie does not exist");
+        }
 
-		MovieVersion movieVersion = new MovieVersion();
+        MovieEntity movieEntity = optionalMovieEntity.get();
 
-	}*/
+        if(movieEntity.getMovieTypeEntity().getId()!=updatedMovie.getTypeId()) {
+
+            MovieTypeEntity movieTypeEntity = optionalMovieTypeEntity.get();
+            movieRepository.versionMovie(movieEntity.getId());
+
+            final MovieEntity updatedMovieEntity = populateMovieEntity(movieTypeEntity);
+            movieRepository.save(updatedMovieEntity);
+
+            MovieVersionEntity movieVersionEntity = movieEntity.getMovieVersionEntity();
+            movieVersionRepository.versionMovieVersionEntity(movieVersionEntity.getMovieId());
+
+            return updateMovieVersion(updatedMovie,updatedMovieEntity);
+        }
+
+        MovieVersionEntity movieVersionEntity = movieEntity.getMovieVersionEntity();
+        movieVersionRepository.versionMovieVersionEntity(movieVersionEntity.getMovieId());
+
+        return updateMovieVersion(updatedMovie,movieEntity);
+    }
+
+    private MovieVo updateMovieVersion(final MovieVo updatedMovie, final MovieEntity movieEntity) throws ParseException {
+
+        final MovieVersionEntity updatedMovieVersionEntity = populateMovieVersionEntity(updatedMovie,movieEntity);
+
+        movieVersionRepository.save(updatedMovieVersionEntity);
+
+        return buildMovieVo(movieEntity,updatedMovieVersionEntity);
+    }
 
 	@Override
 	@Transactional(readOnly=true)
@@ -163,8 +191,8 @@ public class MovieServiceImpl implements MovieService{
 
 			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-			if(movie.getEndDate()!=null) {
-				movieVo.setEndDate(simpleDateFormat.format(movie.getEndDate()));
+			if(movie.getStopDate()!=null) {
+				movieVo.setEndDate(simpleDateFormat.format(movie.getStopDate()));
 			}
 			movieVo.setWatchDate(simpleDateFormat.format(movie.getWatchDate()));
 

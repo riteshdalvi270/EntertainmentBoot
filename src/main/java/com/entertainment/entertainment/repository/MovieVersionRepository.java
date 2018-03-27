@@ -20,6 +20,10 @@ public interface MovieVersionRepository extends org.springframework.data.reposit
     MovieVersionEntity save(MovieVersionEntity movieEntity);
 
     @Query("Select mve from MovieVersionEntity mve where mve.movieName = :name " +
-            "and mve.endDate is null")
+            "and mve.stopDate is null")
     Optional<MovieVersionEntity> doesMovieExistWithName(@Param("name") String name);
+
+    @Modifying
+    @Query("Update MovieVersionEntity mve set mve.stopDate = SYSDATE(), mve.modifiedDate = SYSDATE() where mve.movieId = :id")
+    void versionMovieVersionEntity(@Param("id") long id);
 }

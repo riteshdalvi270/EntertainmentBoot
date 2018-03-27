@@ -19,7 +19,7 @@ public class MovieEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedDate;
 
-	@OneToOne(optional = false)
+	@OneToOne()
 	@JoinColumn(name="MovieTypeId")
 	private MovieTypeEntity movieTypeEntity;
 	

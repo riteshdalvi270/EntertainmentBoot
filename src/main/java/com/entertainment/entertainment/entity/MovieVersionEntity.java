@@ -1,6 +1,5 @@
 package com.entertainment.entertainment.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -10,7 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity(name = "MovieVersionEntity")
 @Table(name="MovieVersion")
 //@EntityListeners(AuditingEntityListener.class)
-public class MovieVersionEntity implements Serializable {
+public class MovieVersionEntity {
 
 	@Id()
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -31,7 +30,7 @@ public class MovieVersionEntity implements Serializable {
 	
 	@Column(name="StopDate")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date endDate;
+	private Date stopDate;
 	
 	@Column(name="DoneWatching")
 	private boolean doneWatching;
@@ -74,12 +73,12 @@ public class MovieVersionEntity implements Serializable {
 		this.description = description;
 	}
 
-	public Date getEndDate() {
-		return endDate;
+	public Date getStopDate() {
+		return stopDate;
 	}
 
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
+	public void setStopDate(Date stopDate) {
+		this.stopDate = stopDate;
 	}
 
 	public boolean isDoneWatching() {
