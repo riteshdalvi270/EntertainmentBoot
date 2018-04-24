@@ -9,6 +9,7 @@ import com.entertainment.entertainment.model.MovieTypeVo;
 import com.entertainment.entertainment.model.MovieVo;
 import com.entertainment.entertainment.service.MovieTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,23 @@ public class MoviesEndpoint {
 		
 		return ResponseEntity.ok(movieType);
 	}
+
+	@GetMapping(value = "movie_type")
+	public ResponseEntity<?> getMovieTypes() {
+
+		List<MovieTypeVo> movieTypes = movieTypeService.getMovieTypes();
+
+		return ResponseEntity.ok(movieTypes);
+	}
+
+	@GetMapping(value = "movie_type/{id}")
+	public ResponseEntity<?> getMovieType(@PathVariable int id) {
+
+		MovieTypeVo movieType = movieTypeService.getMovieType(id);
+
+		return ResponseEntity.ok(movieType);
+	}
+
 
 	@PostMapping(value = "movie")
 	public ResponseEntity<?> addMovies(@Valid @RequestBody MovieVo movie) {
