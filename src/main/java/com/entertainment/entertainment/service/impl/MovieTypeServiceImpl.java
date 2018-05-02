@@ -3,15 +3,17 @@ package com.entertainment.entertainment.service.impl;
 import com.entertainment.entertainment.dao.MovieTypeDao;
 import com.entertainment.entertainment.entity.MovieTypeEntity;
 import com.entertainment.entertainment.model.MovieTypeVo;
-import com.entertainment.entertainment.model.MovieVo;
 import com.entertainment.entertainment.repository.MovieTypeRepository;
 import com.entertainment.entertainment.service.MovieTypeService;
+import com.entertainment.entertainment.solr.MovieEntertainmentSolr;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Ritesh Dalvi
@@ -24,6 +26,10 @@ public class MovieTypeServiceImpl implements MovieTypeService {
 
     @Autowired
     MovieTypeDao movieTypeDao;
+
+
+    @Autowired
+    MovieEntertainmentSolr movieEntertainmentSolr;
 
     @Override
     @Transactional
@@ -61,6 +67,17 @@ public class MovieTypeServiceImpl implements MovieTypeService {
         return movieTypeVos;
     }
 
+    @Override
+    public List<MovieTypeVo> getMovieTypeFromSolr() throws IOException, SolrServerException {
+
+        SolrDocument entries = movieEntertainmentSolr.retrieveFromSolr();
+
+        Collection<Object> movieTypeIds = entries.getFieldValues("movieTypeId");
+        Collection<Object> movieTypes = entries.getFieldValues("movieType");
+
+        return buildMovieTypeVO(movieTypeIds,movieTypes);
+    }
+
 
     private MovieTypeVo buildMovieType(MovieTypeEntity savedMovieType) {
 
@@ -71,5 +88,47 @@ public class MovieTypeServiceImpl implements MovieTypeService {
         movieTypeVo.setDeleted(savedMovieType.isDeleted());
 
         return movieTypeVo;
+    }
+
+    private List<MovieTypeVo> buildMovieTypeVO(Collection<Object> movieTypeIds,Collection<Object> movieTypes) {
+
+        final List<MovieTypeVo> movieTypeVos = new ArrayList<>();
+
+        Iterator<Object> movieTypeIdIterator = movieTypeIds.iterator();
+
+        int counter = 0;
+
+        while(movieTypeIdIterator.hasNext()) {
+
+            String id = (String) movieTypeIdIterator.next();
+
+            final MovieTypeVo movieTypeVo = new MovieTypeVo();
+            movieTypeVo.setId(Integer.valueOf(id));
+
+            movieTypeVos.add(movieTypeVo);
+            counter++;
+        }
+
+
+        Iterator<Object> movieTypeIterator = movieTypes.iterator();
+
+        int i = 0;
+        while (movieTypeIterator.hasNext()) {
+
+            String movieType = (String) movieTypeIdIterator.next();
+
+            if(i > counter) {
+                break;
+            }
+
+            MovieTypeVo movieTypeVo = movieTypeVos.get(i);
+            movieTypeVo.setType(movieType);
+            movieTypeVos.add(i,movieTypeVo);
+
+            i++;
+        }
+
+
+        return movieTypeVos;
     }
 }

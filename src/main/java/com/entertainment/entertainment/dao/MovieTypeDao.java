@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -44,6 +45,6 @@ public class MovieTypeDao {
         public MovieTypeEntity findById(int id) {
 
             return jdbcTemplate.queryForObject("Select * from movie_type where movie_type_id=?",
-                    new Object[] {id},new BeanPropertyRowMapper<>(MovieTypeEntity.class));
+                        new Object[] {id},new BeanPropertyRowMapper<>(MovieTypeEntity.class));
         }
     }

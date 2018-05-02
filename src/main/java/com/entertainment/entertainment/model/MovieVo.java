@@ -35,6 +35,9 @@ public class MovieVo {
     @JsonProperty("watch_date")
     private String watchDate;
 
+    @JsonProperty("child_count")
+    private int childCount;
+
     public long getId() {
         return id;
     }
@@ -105,5 +108,13 @@ public class MovieVo {
 
     public void setTypeId(int typeId) {
         this.typeId = typeId;
+    }
+
+    public int getChildCount() {
+        return childCount;
+    }
+
+    public void setChildCount(int childCount) {
+        this.childCount = childCount;
     }
 }

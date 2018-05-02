@@ -10,6 +10,7 @@ import java.util.Optional;
 import com.entertainment.entertainment.model.MovieVo;
 import com.entertainment.entertainment.repository.MovieTypeRepository;
 import com.entertainment.entertainment.repository.MovieVersionRepository;
+import com.entertainment.entertainment.solr.MovieEntertainmentSolr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -201,6 +202,8 @@ public class MovieServiceImpl implements MovieService{
 			MovieTypeEntity movieTypeEntity = movieEntity.getMovieTypeEntity();
 
 			movieVo.setTypeId(movieTypeEntity.getId());
+
+			movieVo.setChildCount(movieEntity.getChildCount());
 
 			movies.add(movieVo);
 		}

@@ -1,5 +1,7 @@
 package com.entertainment.entertainment.entity;
 
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -25,6 +27,10 @@ public class MovieEntity {
 	
 	@OneToOne(mappedBy="movieEntity",optional = false)
 	private MovieVersionEntity movieVersionEntity;
+
+	//@Transient
+	@Formula("(select count(*) from movie_version mv where mv.id=id)")
+	private int childCount;
 
 	public long getId() {
 		return id;
@@ -65,4 +71,12 @@ public class MovieEntity {
     public void setMovieVersionEntity(MovieVersionEntity movieVersionEntity) {
         this.movieVersionEntity = movieVersionEntity;
     }
+
+	public int getChildCount() {
+		return childCount;
+	}
+
+	public void setChildCount(int childCount) {
+		this.childCount = childCount;
+	}
 }

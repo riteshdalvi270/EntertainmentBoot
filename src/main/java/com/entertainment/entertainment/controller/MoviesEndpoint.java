@@ -1,20 +1,19 @@
 package com.entertainment.entertainment.controller;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import com.entertainment.entertainment.model.MovieTypeVo;
 import com.entertainment.entertainment.model.MovieVo;
 import com.entertainment.entertainment.service.MovieTypeService;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.entertainment.entertainment.entity.MovieEntity;
 import com.entertainment.entertainment.service.MovieService;
 
 @RestController
@@ -38,7 +37,13 @@ public class MoviesEndpoint {
 	@GetMapping(value = "movie_type")
 	public ResponseEntity<?> getMovieTypes() {
 
-		List<MovieTypeVo> movieTypes = movieTypeService.getMovieTypes();
+		List<MovieTypeVo> movieTypes = null;
+
+		try {
+			movieTypes = movieTypeService.getMovieTypeFromSolr();
+		} catch (IOException | SolrServerException e) {
+			ResponseEntity.unprocessableEntity().body(e);
+		}
 
 		return ResponseEntity.ok(movieTypes);
 	}

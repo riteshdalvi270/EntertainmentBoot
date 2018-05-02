@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.entertainment.entertainment.entity.MovieEntity;
 
+import javax.persistence.NamedNativeQuery;
+
 @Repository
 @Transactional(readOnly=true)
 public interface MovieRepository extends org.springframework.data.repository.Repository<MovieEntity, Long> {
@@ -28,4 +30,14 @@ public interface MovieRepository extends org.springframework.data.repository.Rep
 
 	@Query("UPDATE MovieEntity me set me.isDeleted=1 where me.id=:id")
 	void versionMovie(@Param("id") long id);
+
+	@Query(value = "select m.*, ct.ChildCount" +
+			"from (" +
+			"select mv.id, count(movie_id) as ChildCount " +
+			"from movie_version mv " +
+			"group by mv.id" +
+			") as ct join movie m " +
+			"on ct.id = m.id;",nativeQuery = true)
+	List<MovieEntity> getMoviesWithCount();
+
 }
