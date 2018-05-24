@@ -7,7 +7,7 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
 /**
  * @author Ritesh Dalvi
  **/
-/*@SolrDocument(solrCoreName = "entertainmentboot")
+@SolrDocument(solrCoreName = "entertainmentboot")
 public class MovieTypeSolrEntity {
 
     @Id
@@ -16,4 +16,4 @@ public class MovieTypeSolrEntity {
 
     @Indexed(name = "movieType", type = "string")
     private String movieType;
-}*/
+}

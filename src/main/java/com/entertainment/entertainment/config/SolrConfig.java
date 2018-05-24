@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 /**
  * @author Ritesh Dalvi
  **/
-/*@Configuration
+@Configuration
 @EnableSolrRepositories(basePackages = "com.entertainment.entertainment.solr.repository",
 namedQueriesLocation = "classpath:solr-queries.properties"
 )
@@ -29,11 +29,11 @@ public class SolrConfig {
 
     @Bean
     public SolrClient solrClient() {
-        return new HttpSolrClient.Builder().withBaseSolrUrl(environment.getProperty(SOLR_HOST)).build();
+        return new HttpSolrClient(environment.getProperty(SOLR_HOST));
     }
 
     @Bean
     public SolrTemplate solrTemplate(SolrClient client) throws Exception {
         return new SolrTemplate(client);
     }
-}*/
+}
