@@ -1,7 +1,7 @@
 
 package com.entertainment.entertainment.solr;
 
-import com.entertainment.entertainment.solr.entity.MovieTypeSolrEntity;
+import com.entertainment.entertainment.solr.entity.MovieSolrEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
@@ -12,10 +12,10 @@ import java.util.List;
  * @author Ritesh Dalvi
  **/
 
-public interface MovieTypeSolrRepository extends SolrCrudRepository<MovieTypeSolrEntity,String> {
+public interface MovieTypeSolrRepository extends SolrCrudRepository<MovieSolrEntity,String> {
 
-    List<MovieTypeSolrEntity> findByName(String name);
+    List<MovieSolrEntity> findByName(String name);
 
     @Query(name = "MovieType.findByNamedQuery")
-    List<MovieTypeSolrEntity> findByFields(String searchTerm, Pageable pageable);
+    List<MovieSolrEntity> findByFields(String searchTerm, Pageable pageable);
 }

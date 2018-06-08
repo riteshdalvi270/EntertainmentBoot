@@ -5,14 +5,14 @@ import com.entertainment.entertainment.entity.MovieTypeEntity;
 import com.entertainment.entertainment.model.MovieTypeVo;
 import com.entertainment.entertainment.repository.MovieTypeRepository;
 import com.entertainment.entertainment.service.MovieTypeService;
-import com.entertainment.entertainment.solr.MovieEntertainmentSolr;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocument;
+import com.entertainment.entertainment.solr.MovieTypeSolrRepository;
+import com.entertainment.entertainment.solr.entity.MovieSolrEntity;
+import jersey.repackaged.com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,9 +27,8 @@ public class MovieTypeServiceImpl implements MovieTypeService {
     @Autowired
     MovieTypeDao movieTypeDao;
 
-
     @Autowired
-    MovieEntertainmentSolr movieEntertainmentSolr;
+    MovieTypeSolrRepository movieTypeSolrRepository;
 
     @Override
     @Transactional
@@ -68,14 +67,11 @@ public class MovieTypeServiceImpl implements MovieTypeService {
     }
 
     @Override
-    public List<MovieTypeVo> getMovieTypeFromSolr() throws IOException, SolrServerException {
+    public List<MovieTypeVo> getMovieTypeFromSolr() {
 
-        SolrDocument entries = movieEntertainmentSolr.retrieveFromSolr();
+        List<MovieSolrEntity> movieTypeSolrEntities = movieTypeSolrRepository.findByFields("Horror", new PageRequest(0, 10));
 
-        Collection<Object> movieTypeIds = entries.getFieldValues("movieTypeId");
-        Collection<Object> movieTypes = entries.getFieldValues("movieType");
-
-        return buildMovieTypeVO(movieTypeIds,movieTypes);
+        return buildMovieTypeVO(movieTypeSolrEntities);
     }
 
 
@@ -90,44 +86,18 @@ public class MovieTypeServiceImpl implements MovieTypeService {
         return movieTypeVo;
     }
 
-    private List<MovieTypeVo> buildMovieTypeVO(Collection<Object> movieTypeIds,Collection<Object> movieTypes) {
+    private List<MovieTypeVo> buildMovieTypeVO(List<MovieSolrEntity> solrEntities) {
 
-        final List<MovieTypeVo> movieTypeVos = new ArrayList<>();
+        List<MovieTypeVo> movieTypeVos = Lists.newArrayList();
 
-        Iterator<Object> movieTypeIdIterator = movieTypeIds.iterator();
-
-        int counter = 0;
-
-        while(movieTypeIdIterator.hasNext()) {
-
-            String id = (String) movieTypeIdIterator.next();
+        for(MovieSolrEntity movieTypeSolrEntity : solrEntities) {
 
             final MovieTypeVo movieTypeVo = new MovieTypeVo();
-            movieTypeVo.setId(Integer.valueOf(id));
+            movieTypeVo.setId(Integer.parseInt(movieTypeSolrEntity.getMovieTypeId()));
+            movieTypeVo.setType(movieTypeSolrEntity.getMovieType());
 
             movieTypeVos.add(movieTypeVo);
-            counter++;
         }
-
-
-        Iterator<Object> movieTypeIterator = movieTypes.iterator();
-
-        int i = 0;
-        while (movieTypeIterator.hasNext()) {
-
-            String movieType = (String) movieTypeIdIterator.next();
-
-            if(i > counter) {
-                break;
-            }
-
-            MovieTypeVo movieTypeVo = movieTypeVos.get(i);
-            movieTypeVo.setType(movieType);
-            movieTypeVos.add(i,movieTypeVo);
-
-            i++;
-        }
-
 
         return movieTypeVos;
     }

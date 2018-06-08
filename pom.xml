@@ -46,11 +46,11 @@
 			<artifactId>solr-solrj</artifactId>
 			<version>5.5.1</version>
 		</dependency>
-		<!--<dependency>
+		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-solr</artifactId>
-			<version>3.0.6.RELEASE</version>
-		</dependency>-->
+			<version>2.1.12.RELEASE</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
