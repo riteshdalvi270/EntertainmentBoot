@@ -4,6 +4,7 @@ import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity(name="MovieEntity")
 @Table(name="Movie")
@@ -25,11 +26,11 @@ public class MovieEntity {
 	@JoinColumn(name="MovieTypeId")
 	private MovieTypeEntity movieTypeEntity;
 	
-	@OneToOne(mappedBy="movieEntity",optional = false)
-	private MovieVersionEntity movieVersionEntity;
+	@OneToMany(mappedBy="movieEntity")
+	private List<MovieDetailsEntity> movieDetailsEntity;
 
 	//@Transient
-	@Formula("(select count(*) from movie_version mv where mv.id=id)")
+	@Formula("(select count(*) from movie_details mv where mv.id=id)")
 	private int childCount;
 
 	public long getId() {
@@ -64,12 +65,12 @@ public class MovieEntity {
         this.modifiedDate = modifiedDate;
     }
 
-    public MovieVersionEntity getMovieVersionEntity() {
-        return movieVersionEntity;
+    public List<MovieDetailsEntity> getMovieDetailsEntity() {
+        return movieDetailsEntity;
     }
 
-    public void setMovieVersionEntity(MovieVersionEntity movieVersionEntity) {
-        this.movieVersionEntity = movieVersionEntity;
+    public void setMovieDetailsEntity(List<MovieDetailsEntity> movieDetailsEntity) {
+        this.movieDetailsEntity = movieDetailsEntity;
     }
 
 	public int getChildCount() {

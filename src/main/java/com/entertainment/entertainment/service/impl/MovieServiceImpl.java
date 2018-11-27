@@ -9,14 +9,14 @@ import java.util.Optional;
 
 import com.entertainment.entertainment.model.MovieVo;
 import com.entertainment.entertainment.repository.MovieTypeRepository;
-import com.entertainment.entertainment.repository.MovieVersionRepository;
+import com.entertainment.entertainment.repository.MovieDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.entertainment.entertainment.entity.MovieEntity;
 import com.entertainment.entertainment.entity.MovieTypeEntity;
-import com.entertainment.entertainment.entity.MovieVersionEntity;
+import com.entertainment.entertainment.entity.MovieDetailsEntity;
 import com.entertainment.entertainment.repository.MovieRepository;
 import com.entertainment.entertainment.service.MovieService;
 
@@ -27,7 +27,7 @@ public class MovieServiceImpl implements MovieService{
 	MovieRepository movieRepository;
 
 	@Autowired
-	MovieVersionRepository movieVersionRepository;
+	MovieDetailsRepository movieVersionRepository;
 
 	@Autowired
 	MovieTypeRepository movieTypeRepository;
@@ -37,7 +37,7 @@ public class MovieServiceImpl implements MovieService{
 	public MovieVo persist(MovieVo movie) throws Exception {
 
 
-		Optional<MovieVersionEntity> movieVersionEntityOptional = movieVersionRepository.doesMovieExistWithName(movie.getMovieName());
+		Optional<MovieDetailsEntity> movieVersionEntityOptional = movieVersionRepository.doesMovieExistWithName(movie.getMovieName());
 
 		if(movieVersionEntityOptional.isPresent()) {
 
@@ -55,16 +55,16 @@ public class MovieServiceImpl implements MovieService{
 
 		MovieEntity savedMovieEntity = movieRepository.save(movieEntity);
 
-		final MovieVersionEntity movieVersionEntity = populateMovieVersionEntity(movie,movieEntity);
+		final MovieDetailsEntity movieVersionEntity = populateMovieVersionEntity(movie,movieEntity);
 
-		MovieVersionEntity savedMovieVersionEntity = movieVersionRepository.save(movieVersionEntity);
+		MovieDetailsEntity savedMovieVersionEntity = movieVersionRepository.save(movieVersionEntity);
 
 		return buildMovieVo(savedMovieEntity,savedMovieVersionEntity);
 	}
 
-	private MovieVersionEntity populateMovieVersionEntity(final MovieVo movieVo, final MovieEntity movieEntity) throws ParseException {
+	private MovieDetailsEntity populateMovieVersionEntity(final MovieVo movieVo, final MovieEntity movieEntity) throws ParseException {
 
-		final MovieVersionEntity movieVersionEntity = new MovieVersionEntity();
+		final MovieDetailsEntity movieVersionEntity = new MovieDetailsEntity();
 
 		movieVersionEntity.setDescription(movieVo.getDescription());
 		movieVersionEntity.setMovieName(movieVo.getMovieName());
@@ -95,7 +95,7 @@ public class MovieServiceImpl implements MovieService{
 		return movie;
 	}
 
-	private MovieVo buildMovieVo(final MovieEntity savedMovieEntity, final MovieVersionEntity savedMovieVersionEntity) {
+	private MovieVo buildMovieVo(final MovieEntity savedMovieEntity, final MovieDetailsEntity savedMovieVersionEntity) {
 
 		final MovieVo movieVo = new MovieVo();
 		movieVo.setId(savedMovieEntity.getId());
@@ -148,13 +148,13 @@ public class MovieServiceImpl implements MovieService{
             final MovieEntity updatedMovieEntity = populateMovieEntity(movieTypeEntity);
             movieRepository.save(updatedMovieEntity);
 
-            MovieVersionEntity movieVersionEntity = movieEntity.getMovieVersionEntity();
+            MovieDetailsEntity movieVersionEntity = movieEntity.getMovieDetailsEntity().get(0);
             movieVersionRepository.versionMovieVersionEntity(movieVersionEntity.getMovieId());
 
             return updateMovieVersion(updatedMovie,updatedMovieEntity);
         }
 
-        MovieVersionEntity movieVersionEntity = movieEntity.getMovieVersionEntity();
+        MovieDetailsEntity movieVersionEntity = movieEntity.getMovieDetailsEntity().get(0);
         movieVersionRepository.versionMovieVersionEntity(movieVersionEntity.getMovieId());
 
         return updateMovieVersion(updatedMovie,movieEntity);
@@ -162,7 +162,7 @@ public class MovieServiceImpl implements MovieService{
 
     private MovieVo updateMovieVersion(final MovieVo updatedMovie, final MovieEntity movieEntity) throws ParseException {
 
-        final MovieVersionEntity updatedMovieVersionEntity = populateMovieVersionEntity(updatedMovie,movieEntity);
+        final MovieDetailsEntity updatedMovieVersionEntity = populateMovieVersionEntity(updatedMovie,movieEntity);
 
         movieVersionRepository.save(updatedMovieVersionEntity);
 
@@ -184,7 +184,7 @@ public class MovieServiceImpl implements MovieService{
 			movieVo.setId(movieEntity.getId());
 			movieVo.setDeleted(movieEntity.isDeleted());
 
-			final MovieVersionEntity movie = movieEntity.getMovieVersionEntity();
+			final MovieDetailsEntity movie = movieEntity.getMovieDetailsEntity().get(0);
 
 			movieVo.setMovieName(movie.getMovieName());
 			movieVo.setDescription(movie.getDescription());
@@ -220,6 +220,6 @@ public class MovieServiceImpl implements MovieService{
 		}
 
 		// need to fix
-		return buildMovieVo(optionalMovie.get(),optionalMovie.get().getMovieVersionEntity());
+		return buildMovieVo(optionalMovie.get(),optionalMovie.get().getMovieDetailsEntity().get(0));
 	}
 }

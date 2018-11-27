@@ -17,8 +17,8 @@ public interface MovieTypeService {
     MovieTypeVo createMovieType(MovieTypeVo movieTypeRequest);
 
     MovieTypeVo getMovieType(int id);
-
+    
     List<MovieTypeVo> getMovieTypes();
 
-    List<MovieTypeVo> getMovieTypeFromSolr() throws IOException, SolrServerException;
+//    List<MovieTypeVo> getMovieTypeFromSolr() throws IOException, SolrServerException;
 }

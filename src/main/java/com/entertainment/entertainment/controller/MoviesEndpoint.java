@@ -39,11 +39,7 @@ public class MoviesEndpoint {
 
 		List<MovieTypeVo> movieTypes = null;
 
-		try {
-			movieTypes = movieTypeService.getMovieTypeFromSolr();
-		} catch (IOException | SolrServerException e) {
-			ResponseEntity.unprocessableEntity().body(e);
-		}
+		movieTypes = movieTypeService.getMovieTypes();
 
 		return ResponseEntity.ok(movieTypes);
 	}
@@ -57,7 +53,6 @@ public class MoviesEndpoint {
 	}
 
 
-	@PostMapping(value = "movie")
 	public ResponseEntity<?> addMovies(@Valid @RequestBody MovieVo movie) {
 
 		try {

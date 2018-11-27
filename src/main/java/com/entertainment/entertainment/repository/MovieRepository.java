@@ -21,11 +21,12 @@ public interface MovieRepository extends org.springframework.data.repository.Rep
     @Modifying
     MovieEntity save(MovieEntity movieEntity);
 	
-	@Query("SELECT me from MovieEntity me inner join fetch me.movieVersionEntity as mve where me.id = :id and " +
-            "me.isDeleted=0 and mve.stopDate is null")
+	@Query("SELECT me from MovieEntity me inner join fetch me.movieDetailsEntity as mde where me.id = :id and " +
+            "me.isDeleted=0 and mde.stopDate is null")
 	Optional<MovieEntity> getMovie(@Param("id") long id);
 	
-	@Query("Select me from MovieEntity me inner join fetch me.movieVersionEntity as mve where me.isDeleted=0 and mve.stopDate is null")
+	@Query("Select me from MovieEntity me inner join fetch me.movieDetailsEntity as mde where me.isDeleted=0 "
+			+ "and mde.stopDate is null")
 	List<MovieEntity> getMovies();
 
 	@Query("UPDATE MovieEntity me set me.isDeleted=1 where me.id=:id")
@@ -34,8 +35,8 @@ public interface MovieRepository extends org.springframework.data.repository.Rep
 	@Query(value = "select m.*, ct.ChildCount" +
 			"from (" +
 			"select mv.id, count(movie_id) as ChildCount " +
-			"from movie_version mv " +
-			"group by mv.id" +
+			"from movie_details mde " +
+			"group by mde.id" +
 			") as ct join movie m " +
 			"on ct.id = m.id;",nativeQuery = true)
 	List<MovieEntity> getMoviesWithCount();

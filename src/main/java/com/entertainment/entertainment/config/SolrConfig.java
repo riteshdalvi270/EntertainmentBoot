@@ -5,31 +5,27 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.data.solr.repository.config.EnableSolrRepositories;
-
-import javax.annotation.Resource;
 
 /**
  * @author Ritesh Dalvi
  **/
 @Configuration
-@EnableSolrRepositories(basePackages = "com.entertainment.entertainment.solr.repository",
-namedQueriesLocation = "classpath:solr-queries.properties"
+@EnableSolrRepositories(basePackages = "com.entertainment.entertainment.solr",
+namedQueriesLocation = "classpath:solr-query.properties"
 )
 @ComponentScan
 public class SolrConfig {
 
-    static final String SOLR_HOST = "solr.host";
+    static final String SOLR_HOST = "http://localhost:8983/solr/";
 
-    @Resource
-    private Environment environment;
-
+    /*@Resource
+    private Environment environment;*/
 
     @Bean
     public SolrClient solrClient() {
-        return new HttpSolrClient(environment.getProperty(SOLR_HOST));
+        return new HttpSolrClient(SOLR_HOST);
     }
 
     @Bean
